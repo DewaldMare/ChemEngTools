@@ -1,6 +1,11 @@
+'''
+This module implements the Antoine equation.
+Function to import from Antoine: Antoine_eqn
+Created by Dewald Mare.
+'''
 def Antoine_eqn(name, T):
     '''
-    This  solver computes the vapour pressure of a compound at a given temperature. It uses the Antoine equation in the following form:
+    This solver computes the vapour pressure of a compound at a given temperature. It uses the Antoine equation in the following form:
     ln(P*) = A - B/(T + C) with P* in kPa and T in K.
     Available compounds:
     - Acetic acid
