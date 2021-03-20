@@ -6,11 +6,11 @@ Functions available in this module:
 - Pa: Calculate the partial pressure of the compound using equation (1) and a inital guess pressure to solve for pressure.
 - Vh: Calculate the specific humid volume V'.
                                                 V = (1 / MMb + H / MMa) * ((R * T) / Pt)                        (2)
--enthalpy: Calculate the enthalpy of the system. Current version only solves for water and toluene and Cp values needs to be inserted manually.
+- enthalpy: Calculate the enthalpy of the system. Current version only solves for water and toluene and Cp values needs to be inserted manually.
                                                 enth = S * (T - Tref) + λ_w * H                                 (3)
--percH: Calculate the percentage humidity. The ratio of the humidty to the saturated humidity.
+- percH: Calculate the percentage humidity. The ratio of the humidty to the saturated humidity.
                                                 %H = H / Ho                                                     (4)
--relH: Calculate the relative humidity. The ratio of the partial pressure of the vapour to the saturated humidity.
+- relH: Calculate the relative humidity. The ratio of the partial pressure of the vapour to the saturated humidity.
                                                 Hr = Pa/Pa_sat                                                  (5)
 
 Nomenclature:
@@ -68,4 +68,9 @@ def percH(pa, psat, T, Pt, MMa, MMb, dec):
     Ho = humid(psat, Pt, MMa, MMb)
     val = H / Ho
     perc = np.round(val, dec) * 100
+    return perc
+
+def relH(pa, psat, dec):
+    Hr = pa / psat
+    perc = np.round(Hr, dec) * 100
     return perc
