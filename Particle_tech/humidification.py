@@ -65,7 +65,7 @@ def enthalpy(name, Cpa, Cpb, H, T):
     enth = S * (T - Tref) + λ * H
     return enth
 
-def percH(pa, psat, T, Pt, MMa, MMb, dec):
+def percH(pa, psat, Pt, MMa, MMb, dec):
     import numpy as np
     H = humid(pa, Pt, MMa, MMb)
     Ho = humid(psat, Pt, MMa, MMb)
