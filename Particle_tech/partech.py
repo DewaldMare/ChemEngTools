@@ -16,16 +16,15 @@ class Humidification:
     - Pa: Calculate the partial pressure of the compound using equation (1) and a inital guess pressure to solve for pressure.
     - Vh: Calculate the specific humid volume V'.
                                                     V = (1 / MMb + H / MMa) * ((R * T) / Pt)                        (2)
-    - λ_water: Calulate the latent heat of vaporization of water. Temperature is in degrees C
-                                                    λ_water = 2500 - 2.546 * T                                      (3)
-    - λ_tol: Calulate the latent heat of vaporization of toluene. Temperature is in degrees C
-                                                    λ_tol = 406.65 - 0.752 * T                                      (4)
+    - heatvap: Calculate the heat of vaporization of a compound. Compounds available:
+        * Water
+        * Toluene
     - enthalpy: Calculate the enthalpy of the system. Current version only solves for water and toluene and Cp values needs to be inserted manually.
-                                                    enth = S * (T - Tref) + λ_w * H                                 (5)
+                                                    enth = S * (T - Tref) + λ_w * H                                 (4)
     - percH: Calculate the percentage humidity. The ratio of the humidty to the saturated humidity.
-                                                    %H = H / Ho                                                     (6)
+                                                    %H = H / Ho                                                     (5)
     - relH: Calculate the relative humidity. The ratio of the partial pressure of the vapour to the saturated humidity.
-                                                    Hr = pa/pa_sat                                                  (7)
+                                                    Hr = pa/pa_sat                                                  (6)
 
     Nomenclature:
     Symbol      Name                                                    Units
@@ -52,12 +51,20 @@ class Humidification:
         self.dec = dec
         self.psat = pasat
 
-    def humid(pa, Pt, MMa, MMb):
+    def humid(self):
         '''
         Calculate the humidity using the partial pressure of the compound that can condense, the total pressure and the molar masses.
                                                 H = (pa / (Pt - pa)) * (MMa / MMb)
+        Parameters
+        ----------
+        - pa        Partial pressure of component that will condense        (kPa)
+        - Pt        Total pressure                                          (kPa)
+        - MMa       Molar mass of component that will condense              (kg/kmol)
+        - MMb       Molar mass of component that will condense              (kg/kmol)
+
+
         '''
-        H = (pa / (Pt - pa)) * (MMa / MMb)
+        H = (self.pa / (self.Pt - self.pa)) * (self.MMa / self.MMb)
         return H
 
     def Pa(H, Pt, MMa, MMb, guessP):
@@ -73,7 +80,7 @@ class Humidification:
         P = fsolve(res, guessP)
         return P[0]
 
-    def Vh(MMa, MMb, H, Pt, T):
+    def Vh(self, MMa, MMb, H, Pt, T):
         '''
         Calculate the specific humid volume V'.
                                                 V = (1 / MMb + H / MMa) * ((R * T) / Pt)
@@ -81,9 +88,16 @@ class Humidification:
         R = 8.3145 #kJ/kmolK
         V = (1 / MMb + H / MMa) * ((R * T) / Pt)
         return V
-
-    λ_water = lambda T: 2500 - 2.546 * T #in degC
-    λ_tol = lambda T: 406.65 - 0.752 * T #in degC
+    def heatvap(self, name, T):
+        '''
+        Calculate the heat of vaporization of a compound. Compounds available:
+        - Water
+        - Toluene
+        '''
+        if name == "Water":
+            λ = 2500 - 2.546 * (T - 273.15)
+        elif name == "Toluene":
+            λ = 406.65 - 0.752 * (T - 273.15)
 
     def enthalpy(name, Cpa, Cpb, H, T):
         '''
