@@ -143,14 +143,16 @@ class Humidification:
         - λ         Heat of vaporization of compound                        (kJ/kg)
         '''
         if name == "Water":
-            λ = 2500 - 2.546 * (T - 273.15)
+            λw = 2500 - 2.546 * (T - 273.15)
+            return λw 
         elif name == "Toluene":
-            λ = 406.65 - 0.752 * (T - 273.15)
+            λt = 406.65 - 0.752 * (T - 273.15)
+            return λt
 
     def enthalpy(name, Cpa, Cpb, H, T):
         '''
         Calculate the enthalpy of the system. Current version only solves for water and toluene and Cp values needs to be inserted manually.
-                                                enth = S * (T - Tref) + λ_w * H
+                                                enth = S * (T - Tref) + λ * H
 
         Parameters
         ----------
@@ -158,6 +160,7 @@ class Humidification:
         - Cpa       Heat capacity of compound that will condense            (kJ/kg K)
         - Cpb       Heat capacity of compound that will not condense        (kJ/kg K)
         - H         Humidity                                                (kg/kg)
+        - λ         Heat of vaporization of compound                        (kJ/kg)
         - T         Temperature                                             (K)
 
         Returns
@@ -165,9 +168,9 @@ class Humidification:
         - enth      Enthalpy of system                                      (kJ/kg)
         '''
         if name == "Water":
-            λ = λ_water(T - 273.15)
+            λ = 2500 - 2.546 * (T - 273.15)
         elif name == "Toluene":
-            λ = λ_tol(T - 273.15)
+            λ = 406.65 - 0.752 * (T - 273.15)
         S = Cpb + Cpa * H
         Tref = 273.15 #K
         enth = S * (T - Tref) + λ * H
